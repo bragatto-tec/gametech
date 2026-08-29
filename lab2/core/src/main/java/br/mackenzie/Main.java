@@ -54,34 +54,38 @@ public class Main implements ApplicationListener {
     }
 
     private void input() {
-        float speed = 4f;
-        float delta = Gdx.graphics.getDeltaTime();
-    
-        if (Gdx.input.isKeyPressed(Input.Keys.RIGHT)) {
-            bucketSprite.translateX(speed * delta); 
-        } else if (Gdx.input.isKeyPressed(Input.Keys.LEFT)) {
-            bucketSprite.translateX(-speed * delta); 
-        }
-        
-        if (Gdx.input.isTouched()) {
-            touchPos.set(Gdx.input.getX(), Gdx.input.getY()); // Get where the touch happened on screen
-            viewport.unproject(touchPos); // Convert the units to the world units of the viewport
-            bucketSprite.setCenterX(touchPos.x); // Change the horizontally centered position of the bucket
-        }
-        
-    
-        if (Gdx.input.isKeyPressed(Input.Keys.UP)) {
-            bucketSprite.translateY(speed * delta); 
-        } else if (Gdx.input.isKeyPressed(Input.Keys.DOWN)) {
-            bucketSprite.translateY(-speed * delta); 
-        }
+    float speed = 4f;
+    float delta = Gdx.graphics.getDeltaTime();
+
+    if (Gdx.input.isKeyPressed(Input.Keys.RIGHT)) {
+        bucketSprite.translateX(speed * delta);
+    } else if (Gdx.input.isKeyPressed(Input.Keys.LEFT)) {
+        bucketSprite.translateX(-speed * delta);
     }
 
-    private void logic() {
-        float worldWidth = viewport.getWorldWidth();
-        float bucketWidth = bucketSprite.getWidth();
-        bucketSprite.setX(MathUtils.clamp(bucketSprite.getX(),0,worldWidth));
+    if (Gdx.input.isKeyPressed(Input.Keys.UP)) {
+        bucketSprite.translateY(speed * delta);
+    } else if (Gdx.input.isKeyPressed(Input.Keys.DOWN)) {
+        bucketSprite.translateY(-speed * delta);
     }
+
+    if (Gdx.input.isTouched()) {
+        touchPos.set(Gdx.input.getX(), Gdx.input.getY());
+        viewport.unproject(touchPos);
+        bucketSprite.setCenterX(touchPos.x);
+        bucketSprite.setCenterY(touchPos.y);
+    }
+}
+
+    private void logic() {
+    float worldWidth = viewport.getWorldWidth();
+    float worldHeight = viewport.getWorldHeight();
+    float bucketWidth = bucketSprite.getWidth();
+    float bucketHeight = bucketSprite.getHeight();
+
+    bucketSprite.setX(MathUtils.clamp(bucketSprite.getX(), 0, worldWidth - bucketWidth));
+    bucketSprite.setY(MathUtils.clamp(bucketSprite.getY(), 0, worldHeight - bucketHeight));
+}
 
     private void draw() {
         ScreenUtils.clear(Color.BLACK);
